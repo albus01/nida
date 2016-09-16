@@ -129,7 +129,7 @@ httpserver是tcpserver的一个子类，并实现了tcpserver的数据处理接�
 	    nida.ioevent.IOLoop.instance().start()
 - RPC
 	基于Nida Kernel开发直接远程方法调用以及自定义协议通信。
----- ----
+
 
 [^1]:	[https://github.com/tornadoweb/tornado](https://github.com/tornadoweb/tornado)
 
