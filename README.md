@@ -18,6 +18,7 @@ code.1
 
 在这个例子中，HTTPServer注册一个callback函数`handle_request`，当HTTP请求的Header与Body部分异步解析完毕后再由HTTPServer异步回调此函数，并将解析过的请求对象传给它。而所有的异步回调机制都由其下层的模块实现，对上层透明。
 ![](nida.jpg)
+
 图1.Nida架构图
 - runtime lib: 由Python的runtime库函数提供
 	主要用到了网络编程相关的socket, pipe等模块。
@@ -41,22 +42,13 @@ code.1
 在同步、多线程编程模型中，网络I/O过程会遇到阻塞情况，为提高并发简单的处理方式是为每一个用户连接分配一个线程去处理，这样其中一个线程的在进行阻塞型系统调用时不会影响其他线程。然而这种方式存在大量的线程上下文切换[^2]，会遇到C10K问题[^3]。
 使用level-trigger模式的后台服务基于非阻塞异步回调，无需上下文切换，可在单线程上达到高并发。Nida以此为原型进行后台开发。
 ![](tornado_1.jpg)
+
 图2.Nida kernel工作模式
 ### ioevent模块
-ioevent模块实现了基于epoll level-trigger模式的事件监听，提供fd-like的事件监听的添加、修改及删除，以及callback函数的添加。通过start进行事件循环处理，通过stop停止循环。一个简单的TCPServer代码片段如code2：
+ioevent模块实现了基于epoll level-trigger模式的事件监听，提供fd-like的事件监听的添加、修改及删除，以及callback函数的添加。通过start进行事件循环处理，通过stop停止循环。
+一个简单的TCPServer代码片段如code2：
 code.2
 
-	def handle_request(request):
-	    message = "You requested %s\n" % request.uri
-	    request.write("HTTP/1.1 200 OK\r\nContent-Length: %d\r\n\r\n%s" % (
-	          		len(message), message))
-	    request.finish()
-	
-	parse_command()
-	http_server = nida.httpserver.HTTPServer(handle_request)
-	http_server.listen(8080)
-	nida.ioevent.IOLoop.instance().start()
-	
 	sock = socket.socket(socket.AF_INET,socket.SOCK_STREAM,0)
 	sock.setblocking(0)
 	sock.bind(("",port))
@@ -134,6 +126,7 @@ httpserver是tcpserver的一个子类，并实现了tcpserver的数据处理接�
 ### 后续
 - Application层需要进一步完善，完成Web和RequestHandler等相关开发，预期Demo如code5：
 code.5
+
 	class MainHandler(RequestHandler):
 	    def get(self):
 	    self.write("Hello, world")
