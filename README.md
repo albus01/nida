@@ -43,7 +43,8 @@ Nida是一个单线程多进程，非阻塞异步回调，基于Level-Trigger事
 图2.Nida kernel工作模式
 ### ioevent模块
 ioevent模块实现了基于epoll level-trigger模式的事件监听，提供fd-like的事件监听的添加、修改及删除，以及callback函数的添加。通过start进行事件循环处理，通过stop停止循环。一个简单的TCPServer代码片段如code2：
-	code.2
+
+        code.2
 	sock = socket.socket(socket.AF_INET,socket.SOCK_STREAM,0)
 	sock.setblocking(0)
 	sock.bind(("",port))
@@ -52,11 +53,13 @@ ioevent模块实现了基于epoll level-trigger模式的事件监听，提供fd-
 	io_loop = nida.ioevent.IOLoop.current()
 	io_loop.add_handler(sock.fileno(),callback,io_loop.READ)
 	io_loop.start()
+	
 ### iostream模块
 iostream模块提供了对fd-like(包括socekt, pipe)的I/O数据流的读写操作和缓存。iostream将自己注册在IOLoop中进行读写监听，并将读写的数据缓存在Buffer中供上层使用。上层在iostream中的读写操作中注册回调函数，在iotream完成读写操作时异步调用回调函数。
 ![](iostream.jpg)
 图3.iostream工作模式
 一个使用Demo：
+
 	code.3
 	def send_request():
 	    stream.write(b"GET / HTTP/1.0\r\nHost: friendfeed.com\r\n\r\n")
@@ -80,6 +83,7 @@ iostream模块提供了对fd-like(包括socekt, pipe)的I/O数据流的读写操
 	    stream = nida.iostream.IOStream(s)
 	    stream.connect(("friendfeed.com", 80), send_request)
 	    nida.ioevent.IOLoop.current().start()
+	    
 ### tcpserver
 tcpserver基于iostream和ioloop实现，将监听socket加入到ioloop事件循环进行监听并注册处理器，当ioloop监听到新的连接时将其交给处理器，处理器将新的连接封装到iostream中进行读写操作。tcpserver暴露其iostream处理接口，由上层协议对数据进行解析。tcpserver处理TCP事务代码如code4。
 	code.4
