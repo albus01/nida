@@ -123,7 +123,6 @@ httpserver是tcpserver的一个子类，并实现了tcpserver的数据处理接�
 ### 后续
 - Application层需要进一步完善，完成Web和RequestHandler等相关开发，预期Demo如code5：
 code.5
-
 	class MainHandler(RequestHandler):
 	    def get(self):
 	    self.write("Hello, world")
@@ -134,7 +133,6 @@ code.5
 	    ])
 	    application.listen(8080)
 	    nida.ioevent.IOLoop.instance().start()
-
 - RPC
 	基于Nida Kernel开发直接远程方法调用以及自定义协议通信。
 
