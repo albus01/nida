@@ -3,7 +3,8 @@
 Nida是一个单线程多进程，非阻塞异步回调，基于Level-Trigger事件循环驱动的高并发后台框架，使用Python语言开发，基于Tornado[^1]改写。简化并去掉了Tornado一些复杂的特性，方便大家阅读与学习核心源码。
 ---- ----
 一个使用Nida搭建的简单echo HTTP服务的例子如code1所示：
-	code.1
+code.1
+	
 	def handle_request(request):
 	    message = "You requested %s\n" % request.uri
 	    request.write("HTTP/1.1 200 OK\r\nContent-Length: %d\r\n\r\n%s" % (
