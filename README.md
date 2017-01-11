@@ -45,6 +45,17 @@ code.1
 ### ioevent模块
 ioevent模块实现了基于epoll level-trigger模式的事件监听，提供fd-like的事件监听的添加、修改及删除，以及callback函数的添加。通过start进行事件循环处理，通过stop停止循环。一个简单的TCPServer代码片段如code2：
 code.2
+
+	def handle_request(request):
+	    message = "You requested %s\n" % request.uri
+	    request.write("HTTP/1.1 200 OK\r\nContent-Length: %d\r\n\r\n%s" % (
+	          		len(message), message))
+	    request.finish()
+	
+	parse_command()
+	http_server = nida.httpserver.HTTPServer(handle_request)
+	http_server.listen(8080)
+	nida.ioevent.IOLoop.instance().start()
 	
 	sock = socket.socket(socket.AF_INET,socket.SOCK_STREAM,0)
 	sock.setblocking(0)
